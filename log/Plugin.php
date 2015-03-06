@@ -21,7 +21,7 @@ class Plugin extends BasePlugin
                             ->defaultValue(array())
                         ->end()
                         ->scalarNode('endpoint')->end()
-                        ->scalarNode('command')->defaultValue('curl -XPOST %s -d %s')->end()
+                        ->scalarNode('command')->defaultValue('curl -s -XPOST %s -d %s > /dev/null')->end()
                     ->end()
                     ->addDefaultsIfNotSet()
                 ->end()
