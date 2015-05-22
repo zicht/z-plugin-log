@@ -20,8 +20,12 @@ class Plugin extends BasePlugin
                             ->prototype('scalar')->end()
                             ->defaultValue(array())
                         ->end()
-                        ->scalarNode('endpoint')->end()
-                        ->scalarNode('command')->defaultValue('curl -s -XPOST %s -d %s > /dev/null')->end()
+                        ->scalarNode('endpoint')
+                            ->isRequired()
+                        ->end()
+                        ->scalarNode('command')
+                            ->defaultValue('curl -s -XPOST %s -d %s > /dev/null')
+                        ->end()
                     ->end()
                     ->addDefaultsIfNotSet()
                 ->end()
@@ -34,14 +38,25 @@ class Plugin extends BasePlugin
     {
         $container->config['tasks'];
 
-        foreach ($container->config['log']['tasks'] as $item) {
-            foreach (array('pre', 'post') as $when) {
+        foreach ($container->config['log']['tasks'] as $task) {
+
+            foreach (array('pre', 'post') as $step) {
+
+
                 $data = array(
                     'user' => '$(user)',
-                    'task' => $item,
-                    'when' => $when
+                    'task' => $task,
+                    'step' => $step,
+                    'timestamp' => (new \DateTime())->getTimestamp()
                 );
-                $container->config['tasks'][$item][$when][]= sprintf(
+
+                $args = $container->config['tasks'][$task]['args'];
+
+                foreach ($args as $key => $value) {
+                    $data[$key] = sprintf('$(%s)', $key);
+                }
+                
+                $container->config['tasks'][$task][$step][]= sprintf(
                     $container->config['log']['command'],
                     $container->config['log']['endpoint'],
                     "'" . json_encode($data) . "'"
