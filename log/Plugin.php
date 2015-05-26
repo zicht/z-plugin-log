@@ -23,6 +23,9 @@ class Plugin extends BasePlugin
                         ->scalarNode('endpoint')
                             ->isRequired()
                         ->end()
+                        ->scalarNode('projectname')
+                            ->isRequired()
+                        ->end()
                         ->scalarNode('command')
                             ->defaultValue('curl -s -XPOST %s -d %s > /dev/null')
                         ->end()
@@ -42,12 +45,13 @@ class Plugin extends BasePlugin
 
             foreach (array('pre', 'post') as $step) {
 
-
                 $data = array(
                     'user' => '$(user)',
                     'task' => $task,
                     'step' => $step,
-                    'timestamp' => (new \DateTime())->getTimestamp()
+                    'projectname' => $container->config['log']['projectname'],
+                    'timestamp' => (new \DateTime())->getTimestamp(),
+                    'vcs' => $container->config['vcs']['url']
                 );
 
                 $args = $container->config['tasks'][$task]['args'];
