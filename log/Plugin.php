@@ -56,9 +56,9 @@ class Plugin extends BasePlugin
                     'user' => '$(user)',
                     'task' => $task,
                     'step' => $step,
-                    'projectname' => $container->config['log']['projectname'],
+                    'projectname' => '$(log.projectname)',
                     'timestamp' => (new \DateTime())->getTimestamp(),
-                    'vcs' => $container->config['vcs']['url']
+                    'vcs' => '$(vcs.url)'
                 );
 
                 $args = $container->config['tasks'][$task]['args'];
