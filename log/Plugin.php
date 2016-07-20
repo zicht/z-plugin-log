@@ -6,8 +6,15 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Zicht\Tool\Container;
 use Zicht\Tool\Plugin as BasePlugin;
 
+/**
+ * Class Plugin
+ * @package Zicht\Tool\Plugin\Log
+ */
 class Plugin extends BasePlugin
 {
+    /**
+     * @param ArrayNodeDefinition $rootNode
+     */
     public function appendConfiguration(ArrayNodeDefinition $rootNode)
     {
         parent::appendConfiguration($rootNode);
@@ -46,6 +53,9 @@ class Plugin extends BasePlugin
     }
 
 
+    /**
+     * @param Container\ContainerBuilder $container
+     */
     public function setContainerBuilder(Container\ContainerBuilder $container)
     {
         foreach ($container->config['log']['tasks'] as $task) {
@@ -57,7 +67,7 @@ class Plugin extends BasePlugin
                     'task' => $task,
                     'step' => $step,
                     'projectname' => '$(log.projectname)',
-                    'timestamp' => (new \DateTime())->getTimestamp(),
+                    'timestamp' => '$(log.now)',
                     'vcs' => '$(vcs.url)'
                 );
 
@@ -70,11 +80,11 @@ class Plugin extends BasePlugin
                 foreach($container->config['log']['endpoints'] as $endpoint){
 
                     if ($endpoint['format'] === 'slack') {
-                        $data['timestamp'] = new \DateTime(); //overwrite the timestamp property, just because we want to ^^
+                        $data['timestamp'] = '$(log.now_readable)';
                         $data = $this->slackify($data);
                     }
 
-                    $container->config['tasks'][$task][$step][]= sprintf(
+                    $container->config['tasks'][$task][$step][] = sprintf(
                         $endpoint['command'],
                         $endpoint['endpoint'],
                         "'" . json_encode($data) . "'"
@@ -82,6 +92,20 @@ class Plugin extends BasePlugin
                 }
             }
         }
+    }
+
+    /**
+     * @param Container\Container $container
+     */
+    public function setContainer(Container\Container $container)
+    {
+        $container->decl('log.now', function() {
+            return (new \DateTime())->getTimestamp();
+        });
+
+        $container->decl('log.now_readable', function() {
+            return (new \DateTime());
+        });
     }
 
     /**
