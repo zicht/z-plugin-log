@@ -104,7 +104,7 @@ class Plugin extends BasePlugin
         });
 
         $container->decl('log.now_readable', function() {
-            return (new \DateTime());
+            return (new \DateTime())->format('Y-m-d H:i:s');
         });
     }
 
