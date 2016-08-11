@@ -1,10 +1,8 @@
 # @version ">=2.0"
 
 tasks:
-    log:add:badges:
-        help: 'Adds version badges for each environment and adds them to the README.md file'
+    log.badges:
+        help: 'Get markdown code for version badges'
         do: |
-            [ -e "README.md" ] && mv README.md README.md.original && touch README.md; \
-            curl -s  "http://log.dev3.intern/badges_create.php?project=$(log.projectname)" >> README.md; \
-            [ -e "README.md.original" ] && echo -e "\n" >> README.md && cat README.md.original >> README.md; \
-            [ -e "README.md.original" ] && rm README.md.original;
+            ORIGIN=`git remote -v | awk 'NR==1 {print $2}' | cut -d':' -f2`; \
+            curl -s  "http://log.dev3.intern/badges_create.php?project=$(log.projectname)&origin=$ORIGIN";
