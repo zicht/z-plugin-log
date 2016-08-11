@@ -1,3 +1,10 @@
 # @version ">=2.0"
 
-# does nothing, all magic is in the Plugin.php
+tasks:
+    log:add:badges:
+        help: 'Adds version badges for each environment and adds them to the README.md file'
+        do: |
+            [ -e "README.md" ] && mv README.md README.md.original && touch README.md; \
+            curl -s  "http://log.dev3.intern/badges_create.php?project=$(log.projectname)" >> README.md; \
+            [ -e "README.md.original" ] && echo -e "\n" >> README.md && cat README.md.original >> README.md; \
+            [ -e "README.md.original" ] && rm README.md.original;
