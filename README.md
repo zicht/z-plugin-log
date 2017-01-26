@@ -30,5 +30,5 @@ echo 'curl -s -XPOST http://example.org -d '\''(data omitted for legibility)'\''
 
 
 # Maintainer(s)
-* Gerard van Helden <gerard@zicht.nl>
+* Oskar van Velden <oskar@zicht.nl>
 
