@@ -28,7 +28,6 @@ echo 'echo "This is the task"' | /bin/bash -e
 echo 'curl -s -XPOST http://example.org -d '\''(data omitted for legibility)'\'' > /dev/null' | /bin/bash -e
 ```
 
-
-# Maintainer(s)
-* Oskar van Velden <oskar@zicht.nl>
-
+# Maintainers
+* Philip Bergman <philip@zicht.nl>
+* Michael Roterman <michael@zicht.nl>
